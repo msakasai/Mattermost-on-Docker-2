@@ -1,0 +1,68 @@
+version: '3'
+
+services:
+    mm-db:
+        # platform: linux/amd64  # for for Apple silicon (Mac M1) https://docs.docker.com/docker-for-mac/apple-silicon/#known-issues 
+        container_name: mm-mysql
+        image: mysql:8
+        command: --default-authentication-plugin=mysql_native_password
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: mattermost
+            MYSQL_USER: mmuser
+            MYSQL_PASSWORD: mmpass
+            TZ: Asia/Tokyo
+        ports:
+            - "3306:3306"
+        volumes: 
+            - data:/var/lib/mysql
+        networks:
+            - mattermost
+    
+    mattermost:
+        # platform: linux/amd64  # for for Apple silicon (Mac M1) https://docs.docker.com/docker-for-mac/apple-silicon/#known-issues 
+        container_name: mattermost
+        build:
+            context: mattermost/
+            dockerfile: Dockerfile
+            args:
+                - MM_VER=5.36.0
+                - DB_HOST=mm-db
+                - DB_PORT=3306
+                - DATABASE=mattermost
+                - DB_USER=mmuser
+                - DB_PASSWORD=mmpass
+        depends_on:
+            - mm-db
+        environment:
+            TZ: Asia/Tokyo
+        ports:
+            - "8065:8065"
+            - "8067:8067"
+            - "8074:8074"
+            - "8075:8075"
+        volumes:
+            - .:/work
+        networks:
+            - mattermost
+
+    mm-web:
+        # platform: linux/amd64  # for for Apple silicon (Mac M1) https://docs.docker.com/docker-for-mac/apple-silicon/#known-issues 
+        build: 
+            context: nginx/
+            dockerfile: Dockerfile
+        depends_on:
+            - mattermost
+        environment:
+            TZ: Asia/Tokyo
+        ports:
+            - "80:80"
+        networks:
+            - mattermost
+                
+volumes:
+    data:
+
+networks:
+    mattermost:
+        external: true
