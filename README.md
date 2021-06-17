@@ -2,9 +2,11 @@
 
 ## Note
 
-Use web server.  
+Use web server (Nginx) .  
 Nginx configure for focalboard plugins in mm v5.36.0.  
-Commentout the SSL settings for localhost.  
+Commentouted the SSL settings because localhost.  
+
+`nginx/default.conf`
 
 See  
 - https://docs.mattermost.com/administration/changelog.html#focalboard-beta
@@ -14,7 +16,8 @@ See
 
 ## Usage
 
-1. (optional) Change Mattermost Dockerfile build argument
+1. Clone repository
+2. (optional) Change Mattermost Dockerfile build argument
 
 docker-compose.yml
 
@@ -33,7 +36,7 @@ docker-compose.yml
 
 ```
 
-2. Run docker
+3. Run docker
 
 ```
 % ls
@@ -52,10 +55,10 @@ mm-mysql            mm-db               running             0.0.0.0:3306->3306/t
 test_mm-web_1       mm-web              running             0.0.0.0:80->80/tcp, :::80->80/tcp
 ```
 
-3. Access `http://localhost`
-4. Sign-up & Create Team
-5. Install Focalboard plugin
-6. Open Focalboard workspace
+4. Access `http://localhost`
+5. Sign-up & Create Team
+6. Install Focalboard plugin
+7. Open Focalboard workspace
 
 ![open-focalboard](https://user-images.githubusercontent.com/46712420/122416276-90369280-cfc3-11eb-8f51-fb960ae99ab8.gif)
 
