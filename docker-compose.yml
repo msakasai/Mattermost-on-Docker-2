@@ -2,7 +2,7 @@ version: '3'
 
 services:
     mm-db:
-        # platform: linux/amd64  # for for Apple silicon (Mac M1) https://docs.docker.com/docker-for-mac/apple-silicon/#known-issues 
+        platform: linux/amd64  # for for Apple silicon (Mac M1) https://docs.docker.com/docker-for-mac/apple-silicon/#known-issues 
         container_name: mm-mysql
         image: mysql:8
         command: --default-authentication-plugin=mysql_native_password
@@ -20,7 +20,7 @@ services:
             - mattermost
     
     mattermost:
-        # platform: linux/amd64  # for for Apple silicon (Mac M1) https://docs.docker.com/docker-for-mac/apple-silicon/#known-issues 
+        platform: linux/amd64  # for for Apple silicon (Mac M1) https://docs.docker.com/docker-for-mac/apple-silicon/#known-issues 
         container_name: mattermost
         build:
             context: mattermost/
@@ -29,9 +29,10 @@ services:
                 - MM_VER=5.36.0
                 - DB_HOST=mm-db
                 - DB_PORT=3306
-                - DATABASE=mattermost
+                - DB_NAME=mattermost
                 - DB_USER=mmuser
                 - DB_PASSWORD=mmpass
+                - MM_SITE_URL=http://localhost
         depends_on:
             - mm-db
         environment:
@@ -47,7 +48,8 @@ services:
             - mattermost
 
     mm-web:
-        # platform: linux/amd64  # for for Apple silicon (Mac M1) https://docs.docker.com/docker-for-mac/apple-silicon/#known-issues 
+        platform: linux/amd64  # for for Apple silicon (Mac M1) https://docs.docker.com/docker-for-mac/apple-silicon/#known-issues 
+        container_name: mm-web
         build: 
             context: nginx/
             dockerfile: Dockerfile
